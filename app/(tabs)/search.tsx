@@ -3,6 +3,7 @@ import SearchBar from "@/components/SearchBar";
 import { icons } from "@/constants/icons";
 import { images } from "@/constants/images";
 import { fetchMovies } from "@/services/api";
+import { updateSearchCount } from "@/services/appwrite";
 import useFetch from "@/services/setFetch";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, FlatList, Image, Text, View } from "react-native";
@@ -18,7 +19,10 @@ const search = () => {
     reset,
   } = useFetch(() => fetchMovies({ query: searchQuery }), false);
 
+  // 1️⃣ Efecto para buscar películas al escribir
   useEffect(() => {
+    // if (!searchQuery.trim() || !movies || movies.lenght === 0) return;
+
     const timeoutId = setTimeout(async () => {
       if (searchQuery.trim()) {
         await loadMovie();
@@ -28,6 +32,13 @@ const search = () => {
     }, 500);
     return () => clearTimeout(timeoutId);
   }, [searchQuery]);
+
+  // 2️⃣ Efecto que se dispara cuando cambia movies
+  useEffect(() => {
+    if (movies?.length > 0 && movies?.[0]) {
+      updateSearchCount(searchQuery, movies[0]);
+    }
+  }, [movies]);
 
   return (
     <View className="flex-1 bg-primary">
