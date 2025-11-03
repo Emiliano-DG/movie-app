@@ -21,8 +21,6 @@ const search = () => {
 
   // 1️⃣ Efecto para buscar películas al escribir
   useEffect(() => {
-    // if (!searchQuery.trim() || !movies || movies.lenght === 0) return;
-
     const timeoutId = setTimeout(async () => {
       if (searchQuery.trim()) {
         await loadMovie();
